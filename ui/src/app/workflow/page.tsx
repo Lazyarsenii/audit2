@@ -128,14 +128,30 @@ export default function WorkflowPage() {
             repoUrl={workflow.state.repoUrl}
             localPath={workflow.state.localPath}
             branch={workflow.state.branch}
+            regionMode={workflow.state.regionMode}
+            selectedCollectors={workflow.state.selectedCollectors}
+            collectorsList={workflow.state.collectorsList}
+            validationResult={workflow.state.validationResult}
+            isValidating={workflow.state.isValidating}
             loading={workflow.state.loading}
             error={workflow.state.error}
+            analysisId={workflow.state.analysisId}
+            analysisCategories={workflow.state.analysisCategories}
+            projectType={workflow.state.projectType}
+            baselineDocumentId={workflow.state.baselineDocumentId}
             onSourceTypeChange={workflow.setSourceType}
             onRepoUrlChange={workflow.setRepoUrl}
             onLocalPathChange={workflow.setLocalPath}
             onBranchChange={workflow.setBranch}
+            onRegionModeChange={workflow.setRegionMode}
+            onToggleCollector={workflow.toggleCollector}
             onStartAnalysis={handleStartAnalysis}
+            onValidateSource={workflow.validateSource}
+            onLoadCollectors={workflow.loadCollectors}
             onOpenDirectoryPicker={() => setShowDirectoryPicker(true)}
+            onToggleAnalysisCategory={workflow.toggleAnalysisCategory}
+            onProjectTypeChange={workflow.setProjectType}
+            onBaselineDocumentChange={workflow.setBaselineDocumentId}
           />
         );
 
