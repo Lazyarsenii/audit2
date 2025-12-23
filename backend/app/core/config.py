@@ -20,13 +20,13 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/repo_auditor"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./data/auditor.db"
 
     # CORS (comma-separated string, parsed to list)
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3333"
 
     # Security
-    API_KEY_REQUIRED: bool = True  # Enable API key auth by default
+    API_KEY_REQUIRED: bool = False  # Disabled by default for easy deployment
     API_KEYS: str = ""  # Comma-separated list of valid API keys
     SECRET_KEY: str = ""  # For JWT/session signing
 

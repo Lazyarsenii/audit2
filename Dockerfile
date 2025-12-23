@@ -31,6 +31,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend application code
 COPY backend/ .
 
+# Create data directory for SQLite
+RUN mkdir -p /app/data
+
 # Create non-root user
 RUN useradd --create-home appuser && chown -R appuser:appuser /app
 USER appuser
