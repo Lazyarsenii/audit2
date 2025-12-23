@@ -4,11 +4,14 @@ Repo Auditor - Main FastAPI Application.
 Run with: uvicorn app.main:app --reload
 """
 import logging
+import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import health, analyze, reports, github_webhook, metrics, documents, contracts, projects
 from app.api.routes import settings as settings_routes
@@ -131,16 +134,60 @@ app.include_router(document_management_routes.router, prefix="/api", tags=["Docu
 app.include_router(quick_audit_routes.router, prefix="/api", tags=["Quick Audit"])
 
 
-@app.get("/")
-async def root():
-    """Root endpoint with API info."""
-    return {
-        "name": "Repo Auditor",
-        "version": "1.0.0",
-        "status": "running",
-        "docs": "/docs" if settings.DEBUG else None,
-        "health": "/health",
-    }
+# Static files directory
+STATIC_DIR = Path("/app/static")
+
+# Mount static files if directory exists (production)
+if STATIC_DIR.exists():
+    # Mount _next folder for Next.js assets
+    if (STATIC_DIR / "_next").exists():
+        app.mount("/_next", StaticFiles(directory=str(STATIC_DIR / "_next")), name="next-assets")
+    
+    # Serve index.html for root
+    @app.get("/")
+    async def serve_frontend():
+        """Serve frontend index.html."""
+        index_file = STATIC_DIR / "index.html"
+        if index_file.exists():
+            return FileResponse(str(index_file))
+        return JSONResponse({"error": "Frontend not found"}, status_code=404)
+    
+    # Catch-all for SPA routing - serve static files or index.html
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        """Serve static files or fallback to index.html for SPA."""
+        # Skip API routes
+        if full_path.startswith("api/") or full_path.startswith("health") or full_path.startswith("docs") or full_path.startswith("redoc"):
+            return JSONResponse({"error": "Not found"}, status_code=404)
+        
+        # Try to serve the exact file
+        file_path = STATIC_DIR / full_path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(str(file_path))
+        
+        # Try with index.html for directories
+        index_path = STATIC_DIR / full_path / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        
+        # Fallback to main index.html for SPA routing
+        main_index = STATIC_DIR / "index.html"
+        if main_index.exists():
+            return FileResponse(str(main_index))
+        
+        return JSONResponse({"error": "Not found"}, status_code=404)
+else:
+    # Development mode - just show API info
+    @app.get("/")
+    async def root():
+        """Root endpoint with API info."""
+        return {
+            "name": "Repo Auditor",
+            "version": "1.0.0",
+            "status": "running",
+            "docs": "/docs" if settings.DEBUG else None,
+            "health": "/health",
+        }
 
 
 if __name__ == "__main__":
