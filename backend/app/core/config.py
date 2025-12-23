@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./data/auditor.db"
+    DATABASE_URL: str = "sqlite+aiosqlite:////app/data/auditor.db"
 
     # CORS (comma-separated string, parsed to list)
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3333"
