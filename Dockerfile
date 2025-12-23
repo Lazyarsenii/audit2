@@ -13,6 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
 RUN mkdir -p /app/data
 
+# Test imports during build
+RUN python -c "from app.main import app; print('Import OK!')"
+
 EXPOSE 8000
 
 CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
