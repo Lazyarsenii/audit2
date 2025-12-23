@@ -1,9 +1,11 @@
 {
   "mcpServers": {
-    "repo-auditor": {
-      "command": "python3",
-      "args": ["/Users/maksymdemchenko/repo-auditor/backend/mcp_server.py"],
-      "env": {}
+    "quick-auditor": {
+      "command": "python",
+      "args": ["C:/Users/verkh/Downloads/auditor-main/auditor-main/backend/mcp_quick_audit.py"],
+      "env": {
+        "PYTHONPATH": "C:/Users/verkh/Downloads/auditor-main/auditor-main/backend"
+      }
     }
   }
 }
