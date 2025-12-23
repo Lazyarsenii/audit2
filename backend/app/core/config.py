@@ -10,9 +10,6 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    model_config = {
-        "extra": "ignore"
-    }
     """Application settings."""
 
     # Application
@@ -113,6 +110,7 @@ class Settings(BaseSettings):
     UI_URL: str = "https://ui-three-rho.vercel.app"
 
     model_config = {
+        "extra": "ignore",
         "env_file": ".env",
         "env_file_encoding": "utf-8"
     }
