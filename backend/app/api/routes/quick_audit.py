@@ -27,8 +27,8 @@ from app.analyzers.static_analyzer import static_analyzer
 from app.analyzers.git_analyzer import git_analyzer
 from app.services.document_generator import DocumentGenerator, DocumentConfig, DocumentFormat
 from app.adapters.gdrive_adapter import gdrive_adapter, GoogleDriveError
-from app.core.scoring.tech_debt import calculate_tech_debt_score
-from app.core.scoring.repo_health import calculate_repo_health_score
+from app.core.scoring.tech_debt import calculate_tech_debt
+from app.core.scoring.repo_health import calculate_repo_health
 from app.services.cocomo_estimator import cocomo_estimator
 
 logger = logging.getLogger(__name__)
@@ -88,9 +88,16 @@ async def analyze_repo(repo_path: Path) -> dict:
     # Git analysis
     git_metrics = await git_analyzer.analyze(repo_path)
 
-    # Calculate scores
-    repo_health = calculate_repo_health_score(static_metrics, git_metrics)
-    tech_debt = calculate_tech_debt_score(static_metrics, git_metrics)
+    # Combine metrics for repo health scoring
+    combined_metrics = {**static_metrics, **git_metrics}
+
+    # Calculate scores (using correct signatures)
+    repo_health_result = calculate_repo_health(combined_metrics)
+    tech_debt_result = calculate_tech_debt(static_metrics, [])  # Empty semgrep findings
+
+    # Convert to dict for JSON serialization
+    repo_health = repo_health_result.to_dict()
+    tech_debt = tech_debt_result.to_dict()
 
     # Cost estimation
     loc = static_metrics.get("total_loc", 0)
