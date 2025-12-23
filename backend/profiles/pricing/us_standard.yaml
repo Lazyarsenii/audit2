@@ -1,0 +1,27 @@
+id: us_standard
+label: "US Standard"
+description: >
+  Standard US market rates for software development.
+
+regions:
+  US:
+    currency: "USD"
+    blended_rate:
+      min: 75
+      max: 130
+    roles:
+      junior:
+        min: 50
+        max: 75
+      middle:
+        min: 85
+        max: 120
+      senior:
+        min: 120
+        max: 180
+
+discount_factor: 1.0
+overhead_multiplier: 1.40
+
+notes: >
+  US market rates. Higher overhead due to compliance and benefits costs.

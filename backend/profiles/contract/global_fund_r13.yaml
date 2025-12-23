@@ -1,0 +1,117 @@
+id: global_fund_r13
+label: "Global Fund Round 13 - Minimal QA Criteria"
+source:
+  type: grant_contract
+  name: "Global Fund Round 13 Grant Agreement"
+  version: "v1.2"
+  uploaded_at: "2025-12-03"
+  original_files:
+    - "gf_round13.pdf"
+
+description: >
+  Minimal technical / quality / documentation requirements extracted
+  from the Global Fund Round 13 grant agreement.
+
+suggested_scoring_template: regulated_healthcare
+suggested_pricing_profile: public_ngo_eu_ua
+
+requirements:
+  - id: REQ_DOC_001
+    section_ref: "Section 4.2.1"
+    category: documentation
+    title: "User Documentation"
+    description: "User documentation must cover installation, configuration, and troubleshooting."
+    metric_mapping: documentation
+    min_level: 2
+    priority: high
+    blocking: false
+
+  - id: REQ_DOC_002
+    section_ref: "Section 4.2.3"
+    category: documentation
+    title: "API Documentation"
+    description: "All public APIs must be documented with request/response examples."
+    metric_mapping: documentation
+    min_level: 2
+    priority: high
+    blocking: false
+
+  - id: REQ_TEST_001
+    section_ref: "Annex B, 3.1"
+    category: testing
+    title: "Automated Testing"
+    description: "Automated tests should cover core business logic and critical risk flows."
+    metric_mapping: testing
+    min_level: 2
+    priority: critical
+    blocking: true
+
+  - id: REQ_TEST_002
+    section_ref: "Annex B, 3.2"
+    category: testing
+    title: "Integration Tests"
+    description: "Integration tests required for external system interfaces."
+    metric_mapping: testing
+    min_level: 2
+    priority: high
+    blocking: false
+
+  - id: REQ_SEC_001
+    section_ref: "Annex C, 5.4"
+    category: security
+    title: "Dependency Security"
+    description: "No known high severity vulnerabilities in dependencies; regular upgrades required."
+    metric_mapping: security
+    min_level: 2
+    priority: critical
+    blocking: true
+
+  - id: REQ_SEC_002
+    section_ref: "Annex C, 5.6"
+    category: security
+    title: "Data Protection"
+    description: "Personal health data must be encrypted at rest and in transit."
+    metric_mapping: security
+    min_level: 3
+    priority: critical
+    blocking: true
+
+  - id: REQ_INFRA_001
+    section_ref: "Annex D, 2.1"
+    category: infrastructure
+    title: "CI/CD Pipeline"
+    description: "Automated build and deployment pipeline must be configured."
+    metric_mapping: infrastructure
+    min_level: 2
+    priority: high
+    blocking: false
+
+  - id: REQ_INFRA_002
+    section_ref: "Annex D, 2.3"
+    category: infrastructure
+    title: "Containerization"
+    description: "Application should be containerized for consistent deployment."
+    metric_mapping: infrastructure
+    min_level: 1
+    priority: medium
+    blocking: false
+
+qualitative_notes:
+  - id: NOTE_AUDIT_001
+    category: logging
+    title: "Audit Logging"
+    description: "System must support audit logging for admin actions."
+    priority: high
+
+  - id: NOTE_BACKUP_001
+    category: infrastructure
+    title: "Backup Strategy"
+    description: "Regular automated backups with documented recovery procedure."
+    priority: medium
+
+acceptance_thresholds:
+  min_repo_health: 7
+  min_tech_debt: 8
+  min_compliance_percent: 75
+  max_critical_failures: 0
+  max_blocking_failures: 0

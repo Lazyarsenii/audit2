@@ -1,0 +1,208 @@
+# Repo Auditor - Scoring Profile Configuration
+# All thresholds, weights, and criteria for evaluating repositories
+
+version: "1.0"
+
+# =============================================================================
+# REPO HEALTH SCORING (0-3 per metric)
+# =============================================================================
+repo_health:
+  documentation:
+    weights:
+      readme_exists: 0.3
+      readme_has_usage: 0.2
+      readme_has_install: 0.2
+      docs_folder_exists: 0.15
+      architecture_docs: 0.15
+    thresholds:
+      score_0: 0.0    # No README or empty
+      score_1: 0.3    # Basic README only
+      score_2: 0.6    # README + usage + install
+      score_3: 0.85   # Full docs folder + architecture
+
+  structure:
+    required_patterns:
+      - "src/"
+      - "tests/"
+      - "config/"
+    bonus_patterns:
+      - "docs/"
+      - "scripts/"
+      - "infra/"
+    thresholds:
+      score_0: 0      # No structure
+      score_1: 1      # 1 required pattern
+      score_2: 2      # 2 required patterns
+      score_3: 3      # All required + bonus
+
+  runability:
+    dependency_files:
+      - "requirements.txt"
+      - "pyproject.toml"
+      - "package.json"
+      - "Cargo.toml"
+      - "go.mod"
+      - "pom.xml"
+      - "build.gradle"
+    docker_files:
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - "docker-compose.yaml"
+    thresholds:
+      score_0: "no_deps"           # No dependency file
+      score_1: "deps_only"         # Deps but no docs/docker
+      score_2: "deps_with_docs"    # Deps + run instructions
+      score_3: "full_docker"       # Docker + compose + env
+
+  commit_history:
+    thresholds:
+      commits:
+        score_0: 5      # <= 5 commits
+        score_1: 30     # 6-30 commits
+        score_2: 200    # 31-200 commits
+        score_3: 201    # > 200 commits
+      authors:
+        score_0: 1
+        score_1: 2
+        score_2: 5
+        score_3: 6
+      recent_days: 90   # Consider commits in last N days
+      recent_threshold:
+        active: 10      # >= 10 commits = active
+        moderate: 3     # 3-9 commits = moderate
+        stale: 0        # < 3 commits = stale
+
+# =============================================================================
+# TECH DEBT SCORING (0-3 per metric, 0 = worst, 3 = best)
+# =============================================================================
+tech_debt:
+  architecture:
+    max_file_lines: 500          # Files longer than this are "smelly"
+    max_function_lines: 50       # Functions longer than this
+    max_cyclomatic_complexity: 15
+    layer_patterns:
+      domain: ["domain/", "models/", "entities/"]
+      application: ["services/", "use_cases/", "application/"]
+      infrastructure: ["adapters/", "infra/", "repositories/"]
+      api: ["api/", "routes/", "controllers/"]
+    thresholds:
+      score_0: "spaghetti"       # No separation, everything mixed
+      score_1: "partial"         # Some structure, violations common
+      score_2: "reasonable"      # Clear layers, limited coupling
+      score_3: "clean"           # Well-defined, minimal cycles
+
+  code_quality:
+    max_duplication_percent: 5   # Acceptable duplication
+    max_file_size_kb: 100        # Files larger = problematic
+    code_smells_per_kloc:
+      score_0: 20                # > 20 smells per KLOC
+      score_1: 10                # 10-20 smells
+      score_2: 5                 # 5-10 smells
+      score_3: 5                 # < 5 smells
+
+  testing:
+    coverage_thresholds:
+      score_0: 0                 # No tests
+      score_1: 20                # < 20% coverage
+      score_2: 60                # 20-60% coverage
+      score_3: 70                # > 60-70% coverage
+    test_patterns:
+      - "test_*.py"
+      - "*_test.py"
+      - "*.test.ts"
+      - "*.spec.ts"
+      - "*_test.go"
+      - "Test*.java"
+
+  infrastructure:
+    ci_patterns:
+      - ".github/workflows/"
+      - ".gitlab-ci.yml"
+      - "Jenkinsfile"
+      - ".circleci/"
+      - "azure-pipelines.yml"
+      - ".travis.yml"
+    thresholds:
+      score_0: "manual"          # No CI, no Docker
+      score_1: "docker_only"     # Docker but no CI
+      score_2: "basic_ci"        # CI for lint/test
+      score_3: "full_cicd"       # Full CI/CD pipeline
+
+  security_deps:
+    severity_weights:
+      critical: 10
+      high: 5
+      medium: 2
+      low: 1
+      warning: 0.5
+    thresholds:
+      score_0: 50                # Total weighted score > 50
+      score_1: 20                # 20-50
+      score_2: 5                 # 5-20
+      score_3: 5                 # < 5
+
+# =============================================================================
+# PRODUCT LEVEL CLASSIFICATION
+# =============================================================================
+product_level:
+  # Classification rules based on combined scores
+  classifications:
+    rnd_spike:
+      max_repo_health: 4         # Sum of 4 metrics (max 12)
+      max_tech_debt: 4           # Sum of 5 metrics (max 15)
+      description: "One-off experiment, not meant to be maintained"
+
+    prototype:
+      min_repo_health: 4
+      max_repo_health: 7
+      min_tech_debt: 4
+      max_tech_debt: 8
+      description: "Working E2E flow, not production-ready"
+
+    internal_tool:
+      min_repo_health: 6
+      max_repo_health: 9
+      min_tech_debt: 7
+      max_tech_debt: 11
+      description: "Usable by team, deployable, acceptable quality"
+
+    platform_module:
+      min_repo_health: 8
+      max_repo_health: 11
+      min_tech_debt: 10
+      max_tech_debt: 13
+      description: "Suitable to become module in larger platform"
+
+    near_product:
+      min_repo_health: 10
+      min_tech_debt: 12
+      description: "Close to production-ready"
+
+# =============================================================================
+# COMPLEXITY CLASSIFICATION (S/M/L/XL)
+# =============================================================================
+complexity:
+  thresholds:
+    small:
+      max_loc: 8000
+      max_files: 50
+      description: "Single service, few dependencies"
+
+    medium:
+      max_loc: 40000
+      max_files: 200
+      description: "Multiple modules, couple of integrations"
+
+    large:
+      max_loc: 120000
+      max_files: 500
+      description: "Multiple services, complex architecture"
+
+    xlarge:
+      min_loc: 120001
+      description: "Platform/monolith with extensive integration"
+
+  # Adjustment factors based on other metrics
+  adjustments:
+    high_tech_debt_bump: true    # Bump complexity if tech debt is high
+    many_integrations_bump: true # Bump if many external deps

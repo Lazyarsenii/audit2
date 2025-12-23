@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "repo-auditor": {
+      "command": "python3",
+      "args": ["/Users/maksymdemchenko/repo-auditor/backend/mcp_server.py"],
+      "env": {}
+    }
+  }
+}

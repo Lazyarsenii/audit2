@@ -1,0 +1,44 @@
+id: commercial_eu_ua
+label: "Commercial (EU/UA)"
+description: >
+  Standard commercial market rates for EU/UA regions.
+
+regions:
+  UA:
+    currency: "USD"
+    blended_rate:
+      min: 25
+      max: 45
+    roles:
+      junior:
+        min: 15
+        max: 25
+      middle:
+        min: 30
+        max: 50
+      senior:
+        min: 45
+        max: 70
+
+  EU:
+    currency: "EUR"
+    blended_rate:
+      min: 50
+      max: 85
+    roles:
+      junior:
+        min: 35
+        max: 50
+      middle:
+        min: 55
+        max: 85
+      senior:
+        min: 75
+        max: 120
+
+discount_factor: 1.0
+overhead_multiplier: 1.35
+
+notes: >
+  Used for commercial work. No discount applied.
+  Overhead includes project management, infrastructure, QA coordination.

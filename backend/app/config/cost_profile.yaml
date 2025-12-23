@@ -1,0 +1,184 @@
+# Repo Auditor - Cost Estimation Profile
+# Base hours, ratios, and regional rates for effort/cost estimation
+
+version: "1.0"
+
+# =============================================================================
+# BASE DEVELOPMENT HOURS BY COMPLEXITY
+# =============================================================================
+base_hours:
+  # These are baseline DEV hours for "typical" implementation work
+  small:
+    min: 40
+    typical: 50
+    max: 80
+
+  medium:
+    min: 120
+    typical: 175
+    max: 250
+
+  large:
+    min: 250
+    typical: 300
+    max: 450
+
+  xlarge:
+    min: 500
+    typical: 700
+    max: 1200
+
+# =============================================================================
+# ACTIVITY RATIOS (as multiplier of DEV hours)
+# =============================================================================
+activity_ratios:
+  # Total = DEV × (1 + analysis + design + qa + documentation)
+  analysis:
+    min: 0.15
+    typical: 0.25
+    max: 0.35
+    description: "Requirements gathering, research, spike work"
+
+  design:
+    min: 0.20
+    typical: 0.30
+    max: 0.40
+    description: "Architecture, technical design, API design"
+
+  qa:
+    min: 0.15
+    typical: 0.25
+    max: 0.35
+    description: "Testing, QA, bug fixing cycles"
+
+  documentation:
+    min: 0.05
+    typical: 0.10
+    max: 0.20
+    description: "Technical docs, API docs, user guides"
+
+# Total typical multiplier: 1 + 0.25 + 0.30 + 0.25 + 0.10 = 1.90
+# Total max multiplier: 1 + 0.35 + 0.40 + 0.35 + 0.20 = 2.30
+
+# =============================================================================
+# REGIONAL HOURLY RATES
+# =============================================================================
+regional_rates:
+  eu:
+    currency: "EUR"
+    currency_symbol: "€"
+    junior:
+      min: 35
+      max: 55
+    mid:
+      min: 50
+      max: 75
+    senior:
+      min: 70
+      max: 100
+    # Blended rate for estimation (mix of levels)
+    blended:
+      min: 50
+      max: 90
+    description: "Western/Central Europe rates"
+
+  ua:
+    currency: "USD"
+    currency_symbol: "$"
+    junior:
+      min: 15
+      max: 25
+    mid:
+      min: 25
+      max: 40
+    senior:
+      min: 40
+      max: 65
+    # Blended rate for estimation
+    blended:
+      min: 30
+      max: 55
+    description: "Ukraine rates"
+
+# =============================================================================
+# TECH DEBT ADJUSTMENT FACTORS
+# =============================================================================
+# If tech debt is high, multiply hours by these factors
+tech_debt_multipliers:
+  score_0_3:   1.5    # Very high debt (0-3 out of 15)
+  score_4_6:   1.3    # High debt
+  score_7_9:   1.15   # Moderate debt
+  score_10_12: 1.05   # Low debt
+  score_13_15: 1.0    # Minimal debt
+
+# =============================================================================
+# PRODUCT LEVEL ADJUSTMENT
+# =============================================================================
+# Some product levels require more work for same complexity
+product_level_multipliers:
+  rnd_spike: 0.7      # Less work to "productize" since it's just cleanup
+  prototype: 0.85
+  internal_tool: 1.0
+  platform_module: 1.1
+  near_product: 1.2   # Already close, but needs hardening
+
+# =============================================================================
+# HISTORICAL EFFORT ESTIMATION
+# =============================================================================
+historical_estimation:
+  # Heuristics for estimating past effort from git history
+  activity_factor:
+    min: 0.5          # Conservative: 50% of active days = work days
+    typical: 0.7
+    max: 0.9          # Aggressive: 90% of active days
+
+  hours_per_day:
+    min: 4
+    typical: 6
+    max: 8
+
+  # Cap team factor to avoid over-estimation
+  max_effective_authors: 4
+
+  # Disclaimer flag
+  high_uncertainty: true
+  uncertainty_range: 0.4  # ±40% uncertainty
+
+# =============================================================================
+# TASK ESTIMATION DEFAULTS
+# =============================================================================
+task_defaults:
+  # Default hour estimates by task category
+  documentation:
+    small: 2
+    medium: 4
+    large: 8
+
+  testing:
+    small: 4
+    medium: 8
+    large: 16
+
+  refactoring:
+    small: 4
+    medium: 12
+    large: 24
+
+  infrastructure:
+    small: 4
+    medium: 8
+    large: 16
+
+  security:
+    small: 2
+    medium: 6
+    large: 12
+
+# =============================================================================
+# OUTPUT FORMATTING
+# =============================================================================
+output:
+  round_hours_to: 5       # Round hours to nearest 5
+  round_cost_to: 100      # Round costs to nearest 100
+  show_ranges: true       # Show min/max ranges
+  include_breakdown: true # Include activity breakdown

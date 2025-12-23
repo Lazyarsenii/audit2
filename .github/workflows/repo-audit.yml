@@ -1,0 +1,192 @@
+# Repo Auditor - Automated Repository Analysis
+# This workflow runs on pull requests to analyze code quality and security
+
+name: Repo Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to analyze'
+        required: false
+        default: 'main'
+
+env:
+  REPO_AUDITOR_API: ${{ secrets.REPO_AUDITOR_API || 'https://auditor-production-f8be.up.railway.app' }}
+  REPO_AUDITOR_KEY: ${{ secrets.REPO_AUDITOR_KEY }}
+
+jobs:
+  audit:
+    name: Repository Audit
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install analysis tools
+        run: |
+          pip install safety bandit
+
+      - name: Run Security Scan (Safety)
+        id: safety
+        continue-on-error: true
+        run: |
+          if [ -f requirements.txt ]; then
+            safety check -r requirements.txt --json > safety-report.json 2>/dev/null || true
+            VULN_COUNT=$(cat safety-report.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d) if isinstance(d,list) else 0)" 2>/dev/null || echo "0")
+            echo "vulnerabilities=$VULN_COUNT" >> $GITHUB_OUTPUT
+          else
+            echo "vulnerabilities=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Security Scan (Bandit)
+        id: bandit
+        continue-on-error: true
+        run: |
+          if ls *.py 1> /dev/null 2>&1 || [ -d "src" ] || [ -d "app" ]; then
+            bandit -r . -f json --exclude '**/venv/**,**/node_modules/**,**/.git/**' > bandit-report.json 2>/dev/null || true
+            HIGH=$(cat bandit-report.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(sum(1 for r in d.get('results',[]) if r.get('issue_severity')=='HIGH'))" 2>/dev/null || echo "0")
+            MEDIUM=$(cat bandit-report.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(sum(1 for r in d.get('results',[]) if r.get('issue_severity')=='MEDIUM'))" 2>/dev/null || echo "0")
+            echo "high=$HIGH" >> $GITHUB_OUTPUT
+            echo "medium=$MEDIUM" >> $GITHUB_OUTPUT
+          else
+            echo "high=0" >> $GITHUB_OUTPUT
+            echo "medium=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Calculate Metrics
+        id: metrics
+        run: |
+          # Count lines of code
+          LOC=$(find . -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.go" | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
+          echo "loc=$LOC" >> $GITHUB_OUTPUT
+
+          # Count test files
+          TEST_FILES=$(find . -name "test_*.py" -o -name "*_test.py" -o -name "*.test.js" -o -name "*.spec.ts" 2>/dev/null | wc -l || echo "0")
+          echo "test_files=$TEST_FILES" >> $GITHUB_OUTPUT
+
+          # Check for important files
+          echo "has_readme=$([[ -f README.md ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has_dockerfile=$([[ -f Dockerfile ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has_ci=$([[ -d .github/workflows ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+      - name: Generate Audit Summary
+        id: summary
+        run: |
+          VULN="${{ steps.safety.outputs.vulnerabilities }}"
+          HIGH="${{ steps.bandit.outputs.high }}"
+          MEDIUM="${{ steps.bandit.outputs.medium }}"
+          LOC="${{ steps.metrics.outputs.loc }}"
+          TESTS="${{ steps.metrics.outputs.test_files }}"
+
+          # Calculate security score (0-3)
+          if [[ "$HIGH" -gt 0 ]]; then
+            SECURITY_SCORE=0
+            SECURITY_STATUS="Critical"
+          elif [[ "$VULN" -gt 5 ]] || [[ "$MEDIUM" -gt 3 ]]; then
+            SECURITY_SCORE=1
+            SECURITY_STATUS="Warning"
+          elif [[ "$VULN" -gt 0 ]] || [[ "$MEDIUM" -gt 0 ]]; then
+            SECURITY_SCORE=2
+            SECURITY_STATUS="Good"
+          else
+            SECURITY_SCORE=3
+            SECURITY_STATUS="Excellent"
+          fi
+
+          echo "security_score=$SECURITY_SCORE" >> $GITHUB_OUTPUT
+          echo "security_status=$SECURITY_STATUS" >> $GITHUB_OUTPUT
+
+      - name: Post PR Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const security_score = '${{ steps.summary.outputs.security_score }}';
+            const security_status = '${{ steps.summary.outputs.security_status }}';
+            const vuln = '${{ steps.safety.outputs.vulnerabilities }}';
+            const high = '${{ steps.bandit.outputs.high }}';
+            const medium = '${{ steps.bandit.outputs.medium }}';
+            const loc = '${{ steps.metrics.outputs.loc }}';
+            const tests = '${{ steps.metrics.outputs.test_files }}';
+            const has_readme = '${{ steps.metrics.outputs.has_readme }}';
+            const has_dockerfile = '${{ steps.metrics.outputs.has_dockerfile }}';
+            const has_ci = '${{ steps.metrics.outputs.has_ci }}';
+
+            const securityEmoji = {
+              '0': '🔴',
+              '1': '🟡',
+              '2': '🟢',
+              '3': '✅'
+            }[security_score] || '⚪';
+
+            const body = `## 🔍 Repo Auditor Analysis
+
+            ### Security ${securityEmoji} ${security_status}
+
+            | Metric | Value |
+            |--------|-------|
+            | Dependency Vulnerabilities | ${vuln} |
+            | High Severity Issues | ${high} |
+            | Medium Severity Issues | ${medium} |
+            | Security Score | ${security_score}/3 |
+
+            ### Code Metrics
+
+            | Metric | Value |
+            |--------|-------|
+            | Lines of Code | ${parseInt(loc).toLocaleString()} |
+            | Test Files | ${tests} |
+            | Has README | ${has_readme === 'true' ? '✅' : '❌'} |
+            | Has Dockerfile | ${has_dockerfile === 'true' ? '✅' : '❌'} |
+            | Has CI/CD | ${has_ci === 'true' ? '✅' : '❌'} |
+
+            ---
+            *Generated by [Repo Auditor](https://github.com/SEH-foundation/auditor)*
+            `;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('Repo Auditor Analysis')
+            );
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+      - name: Fail on Critical Issues
+        if: steps.summary.outputs.security_score == '0'
+        run: |
+          echo "::error::Critical security issues found!"
+          exit 1

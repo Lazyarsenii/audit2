@@ -1,0 +1,601 @@
+{
+  "analysis_id": "833df4bf",
+  "repo_url": "file:///Users/maksymdemchenko/AI-Platform-ISO-main",
+  "branch": null,
+  "collected_at": "2025-12-03T19:32:28.866630",
+  "metrics_count": 52,
+  "metrics": [
+    {
+      "name": "repo.docs.has_readme",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.866700",
+      "unit": null,
+      "description": "Repository has README.md"
+    },
+    {
+      "name": "repo.docs.readme_size",
+      "value": 61688,
+      "type": "gauge",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.867411",
+      "unit": "bytes",
+      "description": null
+    },
+    {
+      "name": "repo.docs.readme_has_usage",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.867435",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.docs.readme_has_install",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.867450",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.docs.has_docs_folder",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.867460",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.docs.files_count",
+      "value": 508,
+      "type": "gauge",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.878701",
+      "unit": "files",
+      "description": null
+    },
+    {
+      "name": "repo.docs.has_architecture",
+      "value": false,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.878734",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.docs.has_api_docs",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.878751",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.docs.has_changelog",
+      "value": false,
+      "type": "info",
+      "source": "structure",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.878766",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.structure.has_src",
+      "value": false,
+      "type": "info",
+      "source": "structure",
+      "category": "structure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879379",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.structure.has_tests",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "structure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879381",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.structure.has_docs",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "structure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879382",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.structure.has_config",
+      "value": false,
+      "type": "info",
+      "source": "structure",
+      "category": "structure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879383",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.structure.score",
+      "value": 2,
+      "type": "gauge",
+      "source": "structure",
+      "category": "structure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879386",
+      "unit": null,
+      "description": "Structure organization score (0-3)"
+    },
+    {
+      "name": "repo.run.has_deps_file",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879425",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.run.deps_file_type",
+      "value": "pip",
+      "type": "info",
+      "source": "structure",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879426",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.run.has_dockerfile",
+      "value": false,
+      "type": "info",
+      "source": "structure",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879430",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.run.has_docker_compose",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879435",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.run.has_makefile",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879439",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.run.has_instructions",
+      "value": true,
+      "type": "info",
+      "source": "structure",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.879873",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.git.commits_total",
+      "value": 736,
+      "type": "counter",
+      "source": "git",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.916980",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.git.commits_recent",
+      "value": 736,
+      "type": "counter",
+      "source": "git",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:28.991351",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.git.authors_count",
+      "value": 8,
+      "type": "gauge",
+      "source": "git",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:29.016046",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.git.first_commit",
+      "value": "2025-10-02T12:43:17+03:00",
+      "type": "info",
+      "source": "git",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:29.035461",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.git.last_commit",
+      "value": "2025-12-02T19:15:27+01:00",
+      "type": "info",
+      "source": "git",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:29.052182",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.git.active_days",
+      "value": 34,
+      "type": "gauge",
+      "source": "git",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:32:29.076738",
+      "unit": "days",
+      "description": null
+    },
+    {
+      "name": "repo.size.loc",
+      "value": 665067,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {
+        "language": "python"
+      },
+      "timestamp": "2025-12-03T19:32:36.821375",
+      "unit": "lines",
+      "description": null
+    },
+    {
+      "name": "repo.size.files",
+      "value": 14326,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {
+        "language": "python"
+      },
+      "timestamp": "2025-12-03T19:32:36.821397",
+      "unit": "files",
+      "description": null
+    },
+    {
+      "name": "repo.size.loc",
+      "value": 100560,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {
+        "language": "javascript"
+      },
+      "timestamp": "2025-12-03T19:32:45.836599",
+      "unit": "lines",
+      "description": null
+    },
+    {
+      "name": "repo.size.files",
+      "value": 209,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {
+        "language": "javascript"
+      },
+      "timestamp": "2025-12-03T19:32:45.836619",
+      "unit": "files",
+      "description": null
+    },
+    {
+      "name": "repo.size.loc",
+      "value": 542359,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {
+        "language": "typescript"
+      },
+      "timestamp": "2025-12-03T19:32:57.511459",
+      "unit": "lines",
+      "description": null
+    },
+    {
+      "name": "repo.size.files",
+      "value": 911,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {
+        "language": "typescript"
+      },
+      "timestamp": "2025-12-03T19:32:57.511488",
+      "unit": "files",
+      "description": null
+    },
+    {
+      "name": "repo.size.loc_total",
+      "value": 1307986,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:06.670814",
+      "unit": "lines",
+      "description": null
+    },
+    {
+      "name": "repo.size.files_total",
+      "value": 15446,
+      "type": "gauge",
+      "source": "static",
+      "category": "size",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:06.670840",
+      "unit": "files",
+      "description": null
+    },
+    {
+      "name": "repo.size.test_files",
+      "value": 3912,
+      "type": "gauge",
+      "source": "static",
+      "category": "testing",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.502304",
+      "unit": "files",
+      "description": null
+    },
+    {
+      "name": "repo.infra.has_ci",
+      "value": true,
+      "type": "info",
+      "source": "ci",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.502692",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.infra.ci_provider",
+      "value": "github-actions",
+      "type": "info",
+      "source": "ci",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.502695",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.infra.ci_has_tests",
+      "value": true,
+      "type": "info",
+      "source": "ci",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508044",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.infra.ci_has_lint",
+      "value": true,
+      "type": "info",
+      "source": "ci",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508047",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.infra.ci_has_deploy",
+      "value": true,
+      "type": "info",
+      "source": "ci",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508052",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.infra.has_kubernetes",
+      "value": false,
+      "type": "info",
+      "source": "ci",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508082",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.documentation",
+      "value": 2,
+      "type": "gauge",
+      "source": "manual",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508414",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.structure",
+      "value": 2,
+      "type": "gauge",
+      "source": "manual",
+      "category": "structure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508415",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.runability",
+      "value": 2,
+      "type": "gauge",
+      "source": "manual",
+      "category": "runability",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508416",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.history",
+      "value": 3,
+      "type": "gauge",
+      "source": "manual",
+      "category": "history",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508417",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.health_total",
+      "value": 9,
+      "type": "gauge",
+      "source": "manual",
+      "category": "documentation",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508418",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.architecture",
+      "value": 2,
+      "type": "gauge",
+      "source": "manual",
+      "category": "architecture",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508419",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.code_quality",
+      "value": 2,
+      "type": "gauge",
+      "source": "manual",
+      "category": "code_quality",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508420",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.testing",
+      "value": 3,
+      "type": "gauge",
+      "source": "manual",
+      "category": "testing",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508421",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.infrastructure",
+      "value": 3,
+      "type": "gauge",
+      "source": "manual",
+      "category": "infrastructure",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508422",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.security",
+      "value": 3,
+      "type": "gauge",
+      "source": "manual",
+      "category": "security",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508423",
+      "unit": null,
+      "description": null
+    },
+    {
+      "name": "repo.score.tech_debt_total",
+      "value": 13,
+      "type": "gauge",
+      "source": "manual",
+      "category": "architecture",
+      "labels": {},
+      "timestamp": "2025-12-03T19:33:09.508424",
+      "unit": null,
+      "description": null
+    }
+  ],
+  "metadata": {
+    "collectors": [
+      "StructureCollector",
+      "GitCollector",
+      "StaticCollector",
+      "CICollector"
+    ]
+  }
+}

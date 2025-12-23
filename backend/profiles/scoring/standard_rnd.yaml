@@ -1,0 +1,45 @@
+id: standard_rnd
+label: "Standard R&D Scoring"
+description: >
+  Default scoring template for R&D prototypes and internal tools.
+  Balanced weights, no hard regulatory constraints.
+
+weights:
+  repo_health:
+    documentation: 1.0
+    structure: 1.0
+    runability: 1.0
+    history: 0.5
+
+  tech_debt:
+    architecture: 1.0
+    code_quality: 1.0
+    testing: 1.0
+    infrastructure: 1.0
+    security: 1.0
+
+thresholds:
+  repo_health:
+    documentation:
+      min: 1
+    runability:
+      min: 1
+  tech_debt:
+    testing:
+      min: 1
+    security:
+      min: 1
+
+levels:
+  overall_health:
+    good: 8
+    warning: 5
+    critical: 0
+  overall_debt:
+    good: 10
+    warning: 6
+    critical: 0
+
+notes: >
+  This template is neutral and used as default when no regulatory or
+  domain-specific template is selected.

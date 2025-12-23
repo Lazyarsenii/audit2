@@ -1,0 +1,65 @@
+[
+  {
+    "analysis_id": "28cf99ad",
+    "repo_url": "/Users/maksymdemchenko/repo-auditor",
+    "branch": "main",
+    "collected_at": "2025-12-05T20:39:50.440841",
+    "metrics_count": 51
+  },
+  {
+    "analysis_id": "77dedead",
+    "repo_url": "/Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": "main",
+    "collected_at": "2025-12-04T15:35:36.262028",
+    "metrics_count": 52
+  },
+  {
+    "analysis_id": "ed597376",
+    "repo_url": "/Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": "main",
+    "collected_at": "2025-12-04T15:34:37.666213",
+    "metrics_count": 52
+  },
+  {
+    "analysis_id": "8408b47f",
+    "repo_url": "/Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": "main",
+    "collected_at": "2025-12-04T15:08:30.733150",
+    "metrics_count": 52
+  },
+  {
+    "analysis_id": "5f218576",
+    "repo_url": "/Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": "main",
+    "collected_at": "2025-12-04T07:45:11.282524",
+    "metrics_count": 52
+  },
+  {
+    "analysis_id": "3c6eef73",
+    "repo_url": "/Users/maksymdemchenko/repo-auditor",
+    "branch": null,
+    "collected_at": "2025-12-04T07:29:56.242717",
+    "metrics_count": 51
+  },
+  {
+    "analysis_id": "bf671b86",
+    "repo_url": "/Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": null,
+    "collected_at": "2025-12-04T07:17:54.251959",
+    "metrics_count": 52
+  },
+  {
+    "analysis_id": "833df4bf",
+    "repo_url": "file:///Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": null,
+    "collected_at": "2025-12-03T19:32:28.866630",
+    "metrics_count": 52
+  },
+  {
+    "analysis_id": "bfb409d0",
+    "repo_url": "file:///Users/maksymdemchenko/AI-Platform-ISO-main",
+    "branch": null,
+    "collected_at": "2025-12-03T19:31:20.880104",
+    "metrics_count": 52
+  }
+]

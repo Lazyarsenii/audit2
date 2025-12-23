@@ -1,0 +1,27 @@
+Category,Metric,Value
+Summary,Product Level,Alpha
+Summary,Complexity,M
+Summary,Repo Health Total,8/12
+Summary,Tech Debt Total,8/15
+
+Repo Health,Documentation,3/3
+Repo Health,Structure,3/3
+Repo Health,Runability,2/3
+Repo Health,History,0/3
+
+Tech Debt,Architecture,1/3
+Tech Debt,Code Quality,2/3
+Tech Debt,Testing,2/3
+Tech Debt,Infrastructure,0/3
+Tech Debt,Security,3/3
+
+Code,Total Files,79
+Code,Total LOC,15967
+Code,Test Files,9
+
+Git,Commits,0
+Git,Authors,0
+
+Cost,Hours,405
+Cost,Min (EUR),22553
+Cost,Max (EUR),45106

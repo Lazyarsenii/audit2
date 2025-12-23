@@ -1,0 +1,71 @@
+id: internal_tool
+label: "Internal Tool - Basic Requirements"
+source:
+  type: internal_policy
+  name: "Internal Development Standards"
+  version: "v1.0"
+
+description: >
+  Minimal requirements for internal tools. Less strict than external-facing
+  products but ensures basic maintainability.
+
+suggested_scoring_template: standard_rnd
+suggested_pricing_profile: commercial_eu_ua
+
+requirements:
+  - id: REQ_DOC_001
+    section_ref: "Standards 2.1"
+    category: documentation
+    title: "README"
+    description: "Project must have a README with purpose, setup, and usage instructions."
+    metric_mapping: documentation
+    min_level: 1
+    priority: high
+    blocking: false
+
+  - id: REQ_STRUCT_001
+    section_ref: "Standards 2.2"
+    category: structure
+    title: "Code Organization"
+    description: "Code should be organized into logical modules/directories."
+    metric_mapping: structure
+    min_level: 1
+    priority: medium
+    blocking: false
+
+  - id: REQ_RUN_001
+    section_ref: "Standards 2.3"
+    category: runability
+    title: "Dependency Management"
+    description: "Dependencies must be declared in a package manager file."
+    metric_mapping: runability
+    min_level: 1
+    priority: high
+    blocking: false
+
+  - id: REQ_TEST_001
+    section_ref: "Standards 3.1"
+    category: testing
+    title: "Basic Tests"
+    description: "Critical functionality should have at least basic test coverage."
+    metric_mapping: testing
+    min_level: 1
+    priority: medium
+    blocking: false
+
+  - id: REQ_SEC_001
+    section_ref: "Standards 4.1"
+    category: security
+    title: "No Critical Vulnerabilities"
+    description: "No known critical vulnerabilities in production code."
+    metric_mapping: security
+    min_level: 1
+    priority: high
+    blocking: true
+
+acceptance_thresholds:
+  min_repo_health: 4
+  min_tech_debt: 5
+  min_compliance_percent: 60
+  max_critical_failures: 0
+  max_blocking_failures: 1

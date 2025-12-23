@@ -1,0 +1,47 @@
+# Contract Profile Template
+# Copy this file and fill in the values for your specific contract/policy
+
+id: my_contract_id                    # Unique identifier (lowercase, underscores)
+label: "My Contract Name"             # Human-readable name
+source:
+  type: grant_contract                # grant_contract | sla | internal_policy | other
+  name: "Full Contract Name"
+  version: "v1.0"
+  uploaded_at: "2025-01-01"           # Date when profile was created
+  original_files:                     # List of source documents
+    - "contract.pdf"
+
+description: >
+  Brief description of what this contract covers and its key requirements.
+
+# Optional: suggest which scoring/pricing profiles to use with this contract
+suggested_scoring_template: standard_rnd
+suggested_pricing_profile: commercial_eu_ua
+
+# Technical requirements that can be mapped to metrics
+requirements:
+  - id: REQ_XXX_001                   # Unique ID within this profile
+    section_ref: "Section X.Y"        # Reference to original document
+    category: documentation           # documentation | testing | security | infrastructure | architecture | code_quality
+    title: "Requirement Title"
+    description: "Full description of the requirement."
+    metric_mapping: documentation     # Maps to: documentation, structure, runability, history, architecture, code_quality, testing, infrastructure, security
+    min_level: 2                      # Minimum score required (0-3)
+    priority: high                    # critical | high | medium | low
+    blocking: false                   # If true, failure = automatic rejection
+
+# Qualitative requirements that cannot be automatically measured
+qualitative_notes:
+  - id: NOTE_XXX_001
+    category: logging
+    title: "Note Title"
+    description: "Description of qualitative requirement."
+    priority: medium
+
+# Overall acceptance thresholds
+acceptance_thresholds:
+  min_repo_health: 6                  # Minimum repo health score (0-12)
+  min_tech_debt: 7                    # Minimum tech debt score (0-15)
+  min_compliance_percent: 70          # Minimum % of requirements passed
+  max_critical_failures: 0            # Maximum failed critical requirements
+  max_blocking_failures: 0            # Maximum failed blocking requirements

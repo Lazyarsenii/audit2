@@ -1,0 +1,47 @@
+id: regulated_healthcare
+label: "Healthcare / Regulated Projects"
+description: >
+  Emphasizes testing, documentation and security due to regulatory context.
+  Suitable for health-related, financial, or sensitive data projects.
+
+weights:
+  repo_health:
+    documentation: 1.5
+    structure: 1.0
+    runability: 1.0
+    history: 0.5
+
+  tech_debt:
+    architecture: 1.2
+    code_quality: 1.0
+    testing: 1.8
+    infrastructure: 1.2
+    security: 2.0
+
+thresholds:
+  repo_health:
+    documentation:
+      min: 2
+    structure:
+      min: 2
+  tech_debt:
+    testing:
+      min: 2
+    security:
+      min: 2
+    infrastructure:
+      min: 1
+
+levels:
+  overall_health:
+    good: 9
+    warning: 6
+    critical: 0
+  overall_debt:
+    good: 11
+    warning: 7
+    critical: 0
+
+notes: >
+  Designed for projects handling health-related or sensitive data.
+  Higher thresholds and weights for security and testing.

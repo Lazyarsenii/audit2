@@ -1,0 +1,45 @@
+id: public_ngo_eu_ua
+label: "Public / NGO (EU/UA)"
+description: >
+  Pricing profile for NGO / public-sector projects in Europe and Ukraine,
+  adjusted downward relative to pure commercial rates.
+
+regions:
+  UA:
+    currency: "USD"
+    blended_rate:
+      min: 20
+      max: 30
+    roles:
+      junior:
+        min: 10
+        max: 15
+      middle:
+        min: 20
+        max: 35
+      senior:
+        min: 35
+        max: 55
+
+  EU:
+    currency: "EUR"
+    blended_rate:
+      min: 40
+      max: 60
+    roles:
+      junior:
+        min: 25
+        max: 40
+      middle:
+        min: 40
+        max: 70
+      senior:
+        min: 60
+        max: 100
+
+discount_factor: 0.85
+overhead_multiplier: 1.20
+
+notes: >
+  Rate ranges based on open market surveys for Ukraine and Eastern/Western Europe.
+  Discount factor applied for NGO/public sector work.

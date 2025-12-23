@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-12-03T21:42:26.130542",
+  "repo_path": "/Users/maksymdemchenko/repo-auditor",
+  "profile": "eu",
+  "structure": {
+    "has_readme": true,
+    "readme_size": 3106,
+    "readme_has_install": true,
+    "readme_has_usage": true,
+    "has_src": false,
+    "has_tests": false,
+    "has_docs": true,
+    "has_deps": false,
+    "has_dockerfile": false,
+    "has_docker_compose": true,
+    "has_ci": false,
+    "has_makefile": false,
+    "has_changelog": false
+  },
+  "code": {
+    "files": {
+      "python": {
+        "count": 63,
+        "loc": 13780
+      },
+      "javascript": {
+        "count": 3,
+        "loc": 47
+      },
+      "typescript": {
+        "count": 10,
+        "loc": 1960
+      }
+    },
+    "total_loc": 15967,
+    "total_files": 79,
+    "test_files": 9
+  },
+  "git": {
+    "commits": 0,
+    "authors": 0,
+    "first_commit": null,
+    "last_commit": null
+  },
+  "repo_health": {
+    "documentation": 3,
+    "structure": 3,
+    "runability": 2,
+    "history": 0,
+    "total": 8
+  },
+  "tech_debt": {
+    "architecture": 1,
+    "code_quality": 2,
+    "testing": 2,
+    "infrastructure": 0,
+    "security": 3,
+    "total": 8
+  },
+  "classification": {
+    "stage": "Alpha",
+    "confidence": 0.75,
+    "maintenance": "New",
+    "readiness": "Internal Use Only",
+    "next_steps": [
+      "Integration tests",
+      "CD pipeline",
+      "API docs"
+    ],
+    "scores": {
+      "health": 8,
+      "debt": 8
+    }
+  },
+  "product_level": "Alpha",
+  "complexity": "M",
+  "cost": {
+    "hours": 405,
+    "currency": "EUR",
+    "min": 22553,
+    "max": 45106,
+    "formatted": "EUR 22,553 - 45,106",
+    "profile": "EU Standard"
+  },
+  "recommendations": [
+    "[CRITICAL] Add test directory with unit tests",
+    "[IMPORTANT] Add Dockerfile for containerization",
+    "[IMPORTANT] Set up CI/CD pipeline"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+    "include": ["app"],
+    "exclude": ["**/venv/**", "**/__pycache__/**", "**/tests/**"],
+    "typeCheckingMode": "basic",
+    "reportArgumentType": "warning",
+    "reportReturnType": "warning",
+    "reportAttributeAccessIssue": "warning",
+    "reportMissingImports": "warning",
+    "reportOptionalMemberAccess": "warning",
+    "reportAssignmentType": "warning",
+    "pythonVersion": "3.11",
+    "pythonPlatform": "All"
+}
