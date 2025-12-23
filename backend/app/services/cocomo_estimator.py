@@ -183,7 +183,7 @@ class CocomoEstimator:
     # Key insight: modern devs are ~3-4x more productive due to better tools,
     # frameworks, AI assistants, and established patterns.
     MODERN_CONSTANTS = {
-        "a": 0.5,       # Effort coefficient (reduced from 2.94 for modern dev)
+        "a": 0.2,       # Effort coefficient (reduced from 2.94 for modern dev)
         "b": 0.85,      # Base exponent (economies of scale in modern dev)
         "c": 2.0,       # Schedule coefficient (faster delivery in modern teams)
         "d": 0.35,      # Schedule exponent base
