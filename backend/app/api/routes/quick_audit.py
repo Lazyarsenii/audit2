@@ -144,7 +144,7 @@ def generate_documents(analysis: dict, config: QuickAuditRequest) -> list:
     if config.include_pdf:
         try:
             pdf_config = DocumentConfig(format=DocumentFormat.PDF)
-            pdf_bytes = generator.generate_audit_report(analysis, pdf_config)
+            pdf_bytes = generator.generate_pdf(analysis, pdf_config)
             if pdf_bytes:
                 documents.append({
                     "name": f"{repo_name}_report.pdf",
@@ -158,7 +158,7 @@ def generate_documents(analysis: dict, config: QuickAuditRequest) -> list:
     if config.include_excel:
         try:
             xlsx_config = DocumentConfig(format=DocumentFormat.EXCEL)
-            xlsx_bytes = generator.generate_metrics_spreadsheet(analysis, xlsx_config)
+            xlsx_bytes = generator.generate_excel(analysis, xlsx_config)
             if xlsx_bytes:
                 documents.append({
                     "name": f"{repo_name}_metrics.xlsx",
