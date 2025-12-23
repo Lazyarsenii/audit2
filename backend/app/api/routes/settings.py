@@ -18,6 +18,20 @@ from app.core.config import settings
 
 router = APIRouter(prefix="/settings", tags=["settings"])
 
+# =============================================================================
+# Auth Settings (for frontend to check)
+# =============================================================================
+
+@router.get("/auth-required")
+async def get_auth_required():
+    """Check if API key authentication is required."""
+    return {
+        "api_key_required": settings.API_KEY_REQUIRED,
+        "message": "API key is required" if settings.API_KEY_REQUIRED else "No authentication required"
+    }
+
+
+
 PROFILES_DIR = Path(__file__).parent.parent.parent.parent / "profiles"
 
 

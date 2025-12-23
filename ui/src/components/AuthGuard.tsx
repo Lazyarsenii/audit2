@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { hasApiKey } from '@/lib/api';
+import { hasApiKey, API_BASE } from '@/lib/api';
 
-// Только страница входа публичная
+// Public paths that don't require auth
 const PUBLIC_PATHS = ['/auth'];
 
 interface AuthGuardProps {
@@ -15,9 +15,40 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const [apiKeyRequired, setApiKeyRequired] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Проверяем публичные пути
+    // Check if backend requires API key
+    const checkApiKeyRequired = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/settings/auth-required`);
+        if (res.ok) {
+          const data = await res.json();
+          setApiKeyRequired(data.api_key_required ?? false);
+        } else {
+          // If endpoint doesn't exist or fails, assume not required
+          setApiKeyRequired(false);
+        }
+      } catch {
+        // Network error - assume not required for better UX
+        setApiKeyRequired(false);
+      }
+    };
+
+    checkApiKeyRequired();
+  }, []);
+
+  useEffect(() => {
+    // Wait for apiKeyRequired check
+    if (apiKeyRequired === null) return;
+
+    // If API key is not required by backend, authorize immediately
+    if (!apiKeyRequired) {
+      setIsAuthorized(true);
+      return;
+    }
+
+    // Check public paths
     const isPublicPath = PUBLIC_PATHS.some(path => pathname.startsWith(path));
     
     if (isPublicPath) {
@@ -25,20 +56,20 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       return;
     }
 
-    // Проверяем наличие API ключа
+    // Check for API key
     if (hasApiKey()) {
       setIsAuthorized(true);
     } else {
-      // Сохраняем куда хотел пойти пользователь
+      // Save redirect target
       if (pathname !== '/') {
         sessionStorage.setItem('auth_redirect', pathname);
       }
-      // Редирект на страницу входа
+      // Redirect to auth page
       router.push('/auth');
     }
-  }, [pathname, router]);
+  }, [pathname, router, apiKeyRequired]);
 
-  // Показываем загрузку пока проверяем
+  // Show loading while checking
   if (isAuthorized === null) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
