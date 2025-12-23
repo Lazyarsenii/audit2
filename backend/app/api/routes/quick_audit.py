@@ -450,3 +450,144 @@ async def quick_audit_download(request: QuickAuditRequest):
     finally:
         if repo_path and repo_path.parent.exists():
             shutil.rmtree(repo_path.parent, ignore_errors=True)
+
+
+# =============================================================================
+# Work Report Only Endpoint
+# =============================================================================
+
+class WorkReportRequest(BaseModel):
+    """Request for work report generation."""
+    repo_url: str = Field(..., description="Public GitHub/GitLab repository URL")
+    start_date: Optional[str] = Field(None, description="Start date (YYYY-MM-DD), defaults to 1st of current month")
+    end_date: Optional[str] = Field(None, description="End date (YYYY-MM-DD), defaults to end of current month")
+    consultant_name: str = Field("Developer", description="Consultant/developer name")
+    organization: str = Field("Organization", description="Organization name")
+    worker_type: str = Field("worker", description="'worker' (max 8h/day) or 'team' (no daily limit)")
+
+
+@router.post("/work-report")
+async def generate_work_report_only(request: WorkReportRequest):
+    """
+    Generate only the work report PDF.
+    
+    Returns a PDF file with task breakdown based on COCOMO estimate.
+    Hours = COCOMO hours / 10
+    """
+    repo_path = None
+    
+    try:
+        # Clone
+        logger.info(f"Work report for: {request.repo_url}")
+        repo_path = await clone_repo(request.repo_url)
+        repo_name = repo_path.name
+        
+        # Analyze
+        analysis = await analyze_repo(repo_path)
+        
+        # Parse dates
+        if request.start_date:
+            start_date = datetime.strptime(request.start_date, "%Y-%m-%d")
+        else:
+            today = datetime.now()
+            start_date = today.replace(day=1)
+        
+        if request.end_date:
+            end_date = datetime.strptime(request.end_date, "%Y-%m-%d")
+        else:
+            next_month = start_date.replace(day=28) + timedelta(days=4)
+            end_date = next_month - timedelta(days=next_month.day)
+        
+        # Get hours from COCOMO / 10
+        cost_data = analysis.get("cost_estimate", {})
+        hours_data = cost_data.get("hours", {})
+        total_hours = hours_data.get("typical", 100) if isinstance(hours_data, dict) else 100
+        work_hours = total_hours / 10
+        
+        # Config
+        wtype = WorkerType.WORKER if request.worker_type == "worker" else WorkerType.TEAM
+        report_config = WorkReportConfig(
+            start_date=start_date,
+            end_date=end_date,
+            consultant_name=request.consultant_name,
+            organization=request.organization,
+            project_name=repo_name,
+            worker_type=wtype,
+        )
+        
+        # Generate tasks
+        tasks = work_report_generator.generate_tasks_from_analysis(
+            analysis, work_hours, report_config
+        )
+        
+        # Generate PDF
+        pdf_bytes = work_report_generator.generate_pdf_report(
+            tasks, report_config, analysis
+        )
+        
+        # Return PDF
+        return StreamingResponse(
+            io.BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename={repo_name}_work_report.pdf"
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Work report failed: {e}")
+        raise HTTPException(500, f"Work report generation failed: {str(e)}")
+    finally:
+        if repo_path and repo_path.parent.exists():
+            shutil.rmtree(repo_path.parent, ignore_errors=True)
+
+
+@router.get("/work-report/help")
+async def work_report_help():
+    """Get help for work report API."""
+    return {
+        "endpoint": "POST /api/work-report",
+        "description": "Generate work report PDF with task breakdown",
+        "parameters": {
+            "repo_url": {
+                "required": True,
+                "example": "https://github.com/user/repo",
+                "description": "Public repository URL"
+            },
+            "start_date": {
+                "required": False,
+                "format": "YYYY-MM-DD",
+                "example": "2024-12-01",
+                "default": "1st of current month"
+            },
+            "end_date": {
+                "required": False,
+                "format": "YYYY-MM-DD",
+                "example": "2024-12-31",
+                "default": "End of current month"
+            },
+            "consultant_name": {
+                "required": False,
+                "example": "John Doe",
+                "default": "Developer"
+            },
+            "organization": {
+                "required": False,
+                "example": "Company LLC",
+                "default": "Organization"
+            },
+            "worker_type": {
+                "required": False,
+                "options": ["worker", "team"],
+                "description": "worker = max 8h/day, team = no limit",
+                "default": "worker"
+            }
+        },
+        "returns": "PDF file",
+        "example_curl": """curl -X POST "https://audit2-production.up.railway.app/api/work-report" \
+  -H "Content-Type: application/json" \
+  -d '{"repo_url": "https://github.com/user/repo", "consultant_name": "John", "start_date": "2024-12-01", "end_date": "2024-12-31"}' \
+  --output report.pdf"""
+    }
