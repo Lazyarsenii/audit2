@@ -13,7 +13,7 @@ Returns ZIP with all documentation or uploads to Google Drive.
 import io
 import zipfile
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 import tempfile
@@ -30,6 +30,7 @@ from app.adapters.gdrive_adapter import gdrive_adapter, GoogleDriveError
 from app.core.scoring.tech_debt import calculate_tech_debt
 from app.core.scoring.repo_health import calculate_repo_health
 from app.services.cocomo_estimator import cocomo_estimator
+from app.services.work_report_generator import work_report_generator, WorkReportConfig
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -42,6 +43,12 @@ class QuickAuditRequest(BaseModel):
     include_pdf: bool = Field(True, description="Generate PDF report")
     include_excel: bool = Field(True, description="Generate Excel with metrics")
     include_markdown: bool = Field(True, description="Generate Markdown summary")
+    # Work report options
+    include_work_report: bool = Field(False, description="Generate work report with task breakdown")
+    report_start_date: Optional[str] = Field(None, description="Work report start date (YYYY-MM-DD)")
+    report_end_date: Optional[str] = Field(None, description="Work report end date (YYYY-MM-DD)")
+    consultant_name: str = Field("Developer", description="Consultant name for work report")
+    organization_name: str = Field("Organization", description="Organization name for work report")
 
 
 class QuickAuditResponse(BaseModel):
@@ -167,6 +174,58 @@ def generate_documents(analysis: dict, config: QuickAuditRequest) -> list:
                 })
         except Exception as e:
             logger.warning(f"Excel generation failed: {e}")
+
+    # Work report with task breakdown
+    if config.include_work_report:
+        try:
+            # Parse dates or use defaults (current month)
+            if config.report_start_date:
+                start_date = datetime.strptime(config.report_start_date, "%Y-%m-%d")
+            else:
+                today = datetime.now()
+                start_date = today.replace(day=1)
+            
+            if config.report_end_date:
+                end_date = datetime.strptime(config.report_end_date, "%Y-%m-%d")
+            else:
+                # End of current month
+                next_month = start_date.replace(day=28) + timedelta(days=4)
+                end_date = next_month - timedelta(days=next_month.day)
+            
+            # Get total hours from COCOMO estimate and divide by 10
+            cost_data = analysis.get("cost_estimate", {})
+            hours_data = cost_data.get("hours", {})
+            total_hours = hours_data.get("typical", 100) if isinstance(hours_data, dict) else 100
+            work_hours = total_hours / 10  # Divide by 10 as requested
+            
+            report_config = WorkReportConfig(
+                start_date=start_date,
+                end_date=end_date,
+                consultant_name=config.consultant_name,
+                organization=config.organization_name,
+                project_name=repo_name,
+            )
+            
+            # Generate tasks
+            tasks = work_report_generator.generate_tasks_from_analysis(
+                analysis, work_hours, report_config
+            )
+            
+            # Generate PDF work report
+            work_report_pdf = work_report_generator.generate_pdf_report(
+                tasks, report_config, analysis
+            )
+            
+            if work_report_pdf:
+                documents.append({
+                    "name": f"{repo_name}_work_report.pdf",
+                    "type": "pdf",
+                    "content": work_report_pdf,
+                })
+                logger.info(f"Work report generated: {work_hours:.0f} hours distributed across {len(tasks)} tasks")
+                
+        except Exception as e:
+            logger.warning(f"Work report generation failed: {e}")
 
     return documents
 

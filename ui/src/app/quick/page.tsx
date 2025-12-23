@@ -26,9 +26,33 @@ export default function QuickAudit() {
   const [includePdf, setIncludePdf] = useState(true);
   const [includeExcel, setIncludeExcel] = useState(true);
   const [includeMarkdown, setIncludeMarkdown] = useState(true);
+  const [includeWorkReport, setIncludeWorkReport] = useState(false);
+  const [reportStartDate, setReportStartDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  });
+  const [reportEndDate, setReportEndDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+  });
+  const [consultantName, setConsultantName] = useState('Developer');
+  const [organizationName, setOrganizationName] = useState('Organization');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
+
+  const getRequestBody = () => ({
+    repo_url: repoUrl.trim(),
+    gdrive_folder_id: gdriveFolderId.trim() || null,
+    include_pdf: includePdf,
+    include_excel: includeExcel,
+    include_markdown: includeMarkdown,
+    include_work_report: includeWorkReport,
+    report_start_date: includeWorkReport ? reportStartDate : null,
+    report_end_date: includeWorkReport ? reportEndDate : null,
+    consultant_name: consultantName,
+    organization_name: organizationName,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,13 +70,7 @@ export default function QuickAudit() {
       const res = await apiFetch(`${API_BASE}/api/quick-audit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          repo_url: repoUrl.trim(),
-          gdrive_folder_id: gdriveFolderId.trim() || null,
-          include_pdf: includePdf,
-          include_excel: includeExcel,
-          include_markdown: includeMarkdown,
-        }),
+        body: JSON.stringify(getRequestBody()),
       });
 
       if (!res.ok) {
@@ -77,13 +95,7 @@ export default function QuickAudit() {
       const res = await apiFetch(`${API_BASE}/api/quick-audit/download`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          repo_url: repoUrl.trim(),
-          gdrive_folder_id: null,
-          include_pdf: includePdf,
-          include_excel: includeExcel,
-          include_markdown: includeMarkdown,
-        }),
+        body: JSON.stringify(getRequestBody()),
       });
 
       if (!res.ok) {
@@ -205,6 +217,43 @@ export default function QuickAudit() {
                 <span className="text-sm text-slate-700">Markdown Summary</span>
               </label>
             </div>
+          </div>
+
+          {/* Work Report Option */}
+          <div className="border-t border-slate-200 pt-6">
+            <label className="flex items-center gap-2 cursor-pointer mb-4">
+              <input type="checkbox" checked={includeWorkReport} onChange={(e) => setIncludeWorkReport(e.target.checked)}
+                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500" disabled={loading} />
+              <span className="text-sm font-medium text-slate-700">Generate Work Report</span>
+              <span className="text-xs text-slate-500">(Task breakdown with hours)</span>
+            </label>
+            {includeWorkReport && (
+              <div className="ml-6 space-y-4 p-4 bg-slate-50 rounded-lg">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="start_date" className="block text-sm font-medium text-slate-700 mb-1">Start Date</label>
+                    <input type="date" id="start_date" value={reportStartDate} onChange={(e) => setReportStartDate(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm" disabled={loading} />
+                  </div>
+                  <div>
+                    <label htmlFor="end_date" className="block text-sm font-medium text-slate-700 mb-1">End Date</label>
+                    <input type="date" id="end_date" value={reportEndDate} onChange={(e) => setReportEndDate(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm" disabled={loading} />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="consultant_name" className="block text-sm font-medium text-slate-700 mb-1">Consultant Name</label>
+                  <input type="text" id="consultant_name" value={consultantName} onChange={(e) => setConsultantName(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm" disabled={loading} />
+                </div>
+                <div>
+                  <label htmlFor="organization_name" className="block text-sm font-medium text-slate-700 mb-1">Organization</label>
+                  <input type="text" id="organization_name" value={organizationName} onChange={(e) => setOrganizationName(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm" disabled={loading} />
+                </div>
+                <p className="text-xs text-slate-500">Work report takes COCOMO hours estimate, divides by 10, and distributes across development tasks.</p>
+              </div>
+            )}
           </div>
 
           {/* Error */}
@@ -369,6 +418,12 @@ export default function QuickAudit() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             <span><strong>JSON Data:</strong> Raw analysis data for custom integrations</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span><strong>Work Report:</strong> Task breakdown with hours distribution (optional)</span>
           </li>
         </ul>
       </div>
