@@ -49,10 +49,8 @@ def detect_duplication(
         if len(lines) < min_block_size:
             continue
         for i in range(len(lines) - min_block_size + 1):
-            block = "
-".join(lines[i:i + min_block_size])
-            if len(block.replace(" ", "").replace("
-", "")) < 20:
+            block = "\n".join(lines[i:i + min_block_size])
+            if len(block.replace(" ", "").replace("\n", "")) < 20:
                 continue
             block_hash = hashlib.md5(block.encode()).hexdigest()
             hash_to_locs[block_hash].append((fp, i))
