@@ -30,7 +30,7 @@ from app.adapters.gdrive_adapter import gdrive_adapter, GoogleDriveError
 from app.core.scoring.tech_debt import calculate_tech_debt
 from app.core.scoring.repo_health import calculate_repo_health
 from app.services.cocomo_estimator import cocomo_estimator
-from app.services.work_report_generator import work_report_generator, WorkReportConfig
+from app.services.work_report_generator import work_report_generator, WorkReportConfig, WorkerType
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -49,6 +49,7 @@ class QuickAuditRequest(BaseModel):
     report_end_date: Optional[str] = Field(None, description="Work report end date (YYYY-MM-DD)")
     consultant_name: str = Field("Developer", description="Consultant name for work report")
     organization_name: str = Field("Organization", description="Organization name for work report")
+    worker_type: str = Field("worker", description="Worker type: 'worker' (max 8h/day) or 'team' (no limit)")
 
 
 class QuickAuditResponse(BaseModel):
@@ -204,6 +205,7 @@ def generate_documents(analysis: dict, config: QuickAuditRequest) -> list:
                 consultant_name=config.consultant_name,
                 organization=config.organization_name,
                 project_name=repo_name,
+                worker_type=WorkerType.WORKER if config.worker_type == "worker" else WorkerType.TEAM,
             )
             
             # Generate tasks

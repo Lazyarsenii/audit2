@@ -37,6 +37,7 @@ export default function QuickAudit() {
   });
   const [consultantName, setConsultantName] = useState('Developer');
   const [organizationName, setOrganizationName] = useState('Organization');
+  const [workerType, setWorkerType] = useState<'worker' | 'team'>('worker');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
@@ -52,6 +53,7 @@ export default function QuickAudit() {
     report_end_date: includeWorkReport ? reportEndDate : null,
     consultant_name: consultantName,
     organization_name: organizationName,
+    worker_type: workerType,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -250,6 +252,21 @@ export default function QuickAudit() {
                   <label htmlFor="organization_name" className="block text-sm font-medium text-slate-700 mb-1">Organization</label>
                   <input type="text" id="organization_name" value={organizationName} onChange={(e) => setOrganizationName(e.target.value)}
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm" disabled={loading} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Worker Type</label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="worker_type" value="worker" checked={workerType === 'worker'} onChange={() => setWorkerType('worker')}
+                        className="w-4 h-4 text-primary-600 focus:ring-primary-500" disabled={loading} />
+                      <span className="text-sm text-slate-700">Worker (max 8h/day)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="worker_type" value="team" checked={workerType === 'team'} onChange={() => setWorkerType('team')}
+                        className="w-4 h-4 text-primary-600 focus:ring-primary-500" disabled={loading} />
+                      <span className="text-sm text-slate-700">Team (no daily limit)</span>
+                    </label>
+                  </div>
                 </div>
                 <p className="text-xs text-slate-500">Work report takes COCOMO hours estimate, divides by 10, and distributes across development tasks.</p>
               </div>
