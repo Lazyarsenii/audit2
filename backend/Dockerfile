@@ -12,9 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
     wget \
-    # For hadolint (Dockerfile linter)
     ca-certificates \
-    # For weasyprint PDF generation
     libpango-1.0-0 \
     libpangocairo-1.0-0 \
     libgdk-pixbuf2.0-0 \
@@ -22,10 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcairo2 \
     libcairo2-dev \
     pkg-config \
-    # For Node.js (jscpd)
     nodejs \
     npm \
-    # For pycairo/xhtml2pdf build
     gcc \
     clang \
     build-essential \
@@ -39,7 +35,7 @@ RUN wget -O /usr/local/bin/hadolint \
 # Install jscpd (code duplication detector)
 RUN npm install -g jscpd
 
-# Install Python analysis tools globally (available for all analyses)
+# Install Python analysis tools globally
 RUN pip install --no-cache-dir \
     semgrep \
     bandit \
@@ -68,12 +64,8 @@ RUN useradd --create-home appuser \
     && chown -R appuser:appuser /tmp/repo-auditor-clones
 USER appuser
 
-# Expose port
+# Expose port (Railway assigns dynamic PORT)
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# Run application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run application - uses PORT env var from Railway
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
