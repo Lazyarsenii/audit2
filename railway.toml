@@ -1,12 +1,6 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "Dockerfile"
-watchPatterns = ["backend/**"]
 
 [deploy]
-startCommand = "python start.py"
 healthcheckPath = "/health"
-healthcheckTimeout = 180
-numReplicas = 1
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 5
+healthcheckTimeout = 300
