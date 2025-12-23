@@ -27,6 +27,7 @@ from app.api.routes import document_management as document_management_routes
 from app.api.routes import github_repos as github_repos_routes
 from app.api.routes import progress as progress_routes
 from app.api.routes import quick_audit as quick_audit_routes
+from app.api.routes import mcp as mcp_routes
 from app.core.config import settings
 from app.core.database import init_db, close_db
 from app.core.middleware import RateLimitMiddleware, APIKeyMiddleware, RequestLoggingMiddleware
@@ -132,6 +133,7 @@ app.include_router(github_repos_routes.router, prefix="/api", tags=["GitHub Repo
 app.include_router(progress_routes.router, prefix="/api", tags=["Progress"])
 app.include_router(document_management_routes.router, prefix="/api", tags=["Document Management"])
 app.include_router(quick_audit_routes.router, prefix="/api", tags=["Quick Audit"])
+app.include_router(mcp_routes.router, prefix="/api", tags=["MCP"])
 
 
 # Static files directory

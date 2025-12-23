@@ -1,0 +1,17 @@
+{
+  "mcpb_version": "0.1",
+  "name": "quick-auditor",
+  "version": "1.0.0",
+  "description": "Quick Project Auditor - analyze repositories and generate work reports",
+  "author": {
+    "name": "Audit Team"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"]
+    }
+  }
+}
